@@ -1,0 +1,29 @@
+sudo: required
+
+services:
+  - docker
+
+language: node_js
+node_js:
+  - "8"
+
+env:
+  - NODE_ENV=development
+  - NODE_ENV=mysql
+  - NODE_ENV=mysql5
+  - NODE_ENV=postgres
+  - NODE_ENV=postgres9
+
+before_script:
+  - .travis/setUp.sh
+
+script:
+  - npm run lint
+  - npm test
+
+after_failure:
+  - docker ps -a
+  - docker logs queue-knex-db
+
+after_script:
+  - .travis/tearDown.sh

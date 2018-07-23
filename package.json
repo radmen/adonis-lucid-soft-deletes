@@ -1,0 +1,21 @@
+{
+  "name": "@radmen/adonis-soft-deletes",
+  "version": "0.1.0",
+  "description": "Experimental implementation of soft-deletes for Adonis Lucid",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@adonisjs/lucid": "^6.0.1",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "mysql2": "^1.5.3",
+    "pg": "^7.4.3",
+    "sinon": "^6.1.4",
+    "sinon-chai": "^3.2.0",
+    "sqlite3": "^4.0.2"
+  }
+}
