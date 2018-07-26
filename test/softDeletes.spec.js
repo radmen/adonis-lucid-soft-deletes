@@ -64,7 +64,7 @@ describe('softDeletes', () => {
 
   it('marks model as deleted', async () => {
     const clock = sinon.useFakeTimers({
-      now: new Date
+      now: new Date()
     })
     const model = await User.create({ username: 'Jon' })
 
