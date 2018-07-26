@@ -3,6 +3,7 @@ const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 const lucidFactory = require('@adonisjs/lucid')
 const fold = require('@adonisjs/fold')
+const moment = require('moment')
 const iocResolver = require('@adonisjs/lucid/lib/iocResolver')
 const ServiceProvider = require('../providers/SoftDeletesProvider')
 
@@ -12,6 +13,7 @@ chai.use(sinonChai)
 
 const { expect } = chai
 const { ioc } = fold
+const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss'
 
 fold.resolver.appNamespace('Adonis')
 
@@ -61,7 +63,9 @@ describe('softDeletes', () => {
   })
 
   it('marks model as deleted', async () => {
-    const clock = sinon.useFakeTimers()
+    const clock = sinon.useFakeTimers({
+      now: new Date
+    })
     const model = await User.create({ username: 'Jon' })
 
     await model.delete()
@@ -84,7 +88,7 @@ describe('softDeletes', () => {
   it('restores deleted model', async () => {
     const user = await User.create({
       username: 'Jon',
-      deleted_at: new Date()
+      deleted_at: moment().format(DATE_FORMAT)
     })
 
     await user.restore()
@@ -113,7 +117,7 @@ describe('softDeletes', () => {
     await Promise.all([
       User.create({ username: 'Jon' }),
       User.create({ username: 'Array' }),
-      User.create({ username: 'Ed', deleted_at: new Date() })
+      User.create({ username: 'Ed', deleted_at: moment().format(DATE_FORMAT) })
     ])
 
     const list = await User.all()
@@ -125,7 +129,7 @@ describe('softDeletes', () => {
     await Promise.all([
       User.create({ username: 'Jon' }),
       User.create({ username: 'Array' }),
-      User.create({ username: 'Ed', deleted_at: new Date() })
+      User.create({ username: 'Ed', deleted_at: moment().format(DATE_FORMAT) })
     ])
 
     const list = await User.query().withTrashed().fetch()
@@ -136,7 +140,7 @@ describe('softDeletes', () => {
     await Promise.all([
       User.create({ username: 'Jon' }),
       User.create({ username: 'Array' }),
-      User.create({ username: 'Ed', deleted_at: new Date() })
+      User.create({ username: 'Ed', deleted_at: moment().format(DATE_FORMAT) })
     ])
 
     const list = await User.withTrashed().fetch()
@@ -147,7 +151,7 @@ describe('softDeletes', () => {
     await Promise.all([
       User.create({ username: 'Jon' }),
       User.create({ username: 'Array' }),
-      User.create({ username: 'Ed', deleted_at: new Date() })
+      User.create({ username: 'Ed', deleted_at: moment().format(DATE_FORMAT) })
     ])
 
     const list = await User.query().onlyTrashed().fetch()
@@ -158,7 +162,7 @@ describe('softDeletes', () => {
     await Promise.all([
       User.create({ username: 'Jon' }),
       User.create({ username: 'Array' }),
-      User.create({ username: 'Ed', deleted_at: new Date() })
+      User.create({ username: 'Ed', deleted_at: moment().format(DATE_FORMAT) })
     ])
 
     const list = await User.onlyTrashed().fetch()

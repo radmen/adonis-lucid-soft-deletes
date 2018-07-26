@@ -20,7 +20,7 @@ class SoftDeletes {
 
       const updatePromise = force
         ? query.delete()
-        : query.update({ deleted_at: now })
+        : query.update({ deleted_at: Model.formatDates('deleted_at', now) })
 
       const affected = await updatePromise
 
