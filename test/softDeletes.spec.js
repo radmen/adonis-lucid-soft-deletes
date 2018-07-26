@@ -22,7 +22,7 @@ const defineModel = async (lucid, bootCallback = noop) => {
     static boot () {
       super.boot()
 
-      this.addTrait('@provider:Lucid/SoftDelete')
+      this.addTrait('@provider:Lucid/SoftDeletes')
       bootCallback.call(this)
     }
   }

@@ -2,7 +2,7 @@
 
 const Database = use('Database')
 
-class SoftDelete {
+class SoftDeletes {
   register (Model) {
     Model.addGlobalScope(
       query => {
@@ -99,4 +99,4 @@ class SoftDelete {
   }
 }
 
-module.exports = SoftDelete
+module.exports = SoftDeletes

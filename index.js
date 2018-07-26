@@ -1,3 +1,3 @@
-const ServiceProvider = require('./provider/SoftDeleteProvider')
+const ServiceProvider = require('./provider/SoftDeletesProvider')
 
 module.exports = { ServiceProvider }
