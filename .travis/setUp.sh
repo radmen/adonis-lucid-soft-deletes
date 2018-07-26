@@ -7,12 +7,10 @@ case "$NODE_ENV" in
       -e MYSQL_USER=test \
       -e MYSQL_PASSWORD=test \
       -e MYSQL_ROOT_PASSWORD=secret \
-      mysql
+      -v "${PWD}/.travis/mysql-8-init.sql:/docker-entrypoint-initdb.d/init.sql" \
+      mysql:8
 
-    sleep 60
-
-    docker exec knex-db mysql -uroot -psecret -e"ALTER USER 'test'@'%' IDENTIFIED WITH mysql_native_password BY 'test';"
-    docker exec knex-db mysql -uroot -psecret -e"FLUSH PRIVILEGES;"
+    sleep 30
     ;;
 
   "mysql5")
@@ -23,7 +21,7 @@ case "$NODE_ENV" in
       -e MYSQL_RANDOM_ROOT_PASSWORD=1 \
       mysql:5
 
-    sleep 20
+    sleep 30
     ;;
 
   "postgres")
