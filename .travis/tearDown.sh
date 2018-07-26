@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker stop queue-knex-db
+docker stop knex-db
