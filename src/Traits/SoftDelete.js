@@ -35,16 +35,10 @@ class SoftDelete {
       return !!affected
     }
 
-    Model.prototype.restore = async function (trx) {
+    Model.prototype.restore = async function () {
       await this.constructor.$hooks.before.exec('restore', this)
 
       const query = Database.table(this.constructor.table)
-
-      if (trx) {
-        // @TODO is this method mutating?
-        query.transacting(trx)
-      }
-
       const affected = await query.where(this.constructor.primaryKey, this.primaryKeyValue)
         .update({ deleted_at: null })
 
