@@ -6,7 +6,7 @@ class SoftDelete {
   register (Model) {
     Model.addGlobalScope(
       query => {
-        query.whereNull('deleted_at')
+        query.whereNull(`${Model.table}.deleted_at`)
       },
       'soft_deletes'
     )
