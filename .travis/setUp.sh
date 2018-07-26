@@ -6,10 +6,13 @@ case "$NODE_ENV" in
       -e MYSQL_DATABASE=test \
       -e MYSQL_USER=test \
       -e MYSQL_PASSWORD=test \
-      -e MYSQL_RANDOM_ROOT_PASSWORD=1 \
+      -e MYSQL_ROOT_PASSWORD=secret \
       mysql
 
-    sleep 20
+    sleep 60
+
+    docker exec knex-db mysql -uroot -psecret -e"ALTER USER 'test'@'%' IDENTIFIED WITH mysql_native_password BY 'test';"
+    docker exec knex-db mysql -uroot -psecret -e"FLUSH PRIVILEGES;"
     ;;
 
   "mysql5")
