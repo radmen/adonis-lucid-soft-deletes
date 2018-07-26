@@ -15,12 +15,11 @@ const { ioc } = fold
 
 fold.resolver.appNamespace('Adonis')
 
-const dateToSeconds = date => Math.floor(new Date(date).getTime() / 1000, 0)
 const noop = () => {}
 
 const defineModel = async (lucid, bootCallback = noop) => {
   const User = class extends lucid.Model {
-    static boot() {
+    static boot () {
       super.boot()
 
       this.addTrait('@provider:Lucid/SoftDelete')
@@ -41,7 +40,6 @@ describe('softDeletes', () => {
 
   before(async () => {
     lucid = lucidFactory(helpers.lucidConfig)
-    Model = lucid.Model
 
     ioc.singleton('Adonis/Src/Database', () => lucid.db)
     ioc.alias('Adonis/Src/Database', 'Database')
@@ -64,9 +62,7 @@ describe('softDeletes', () => {
 
   it('marks model as deleted', async () => {
     const clock = sinon.useFakeTimers()
-    const user = await User.create({ username: 'Jon' })
-
-    const model = await User.firstOrFail()
+    const model = await User.create({ username: 'Jon' })
 
     await model.delete()
 
@@ -117,7 +113,7 @@ describe('softDeletes', () => {
     await Promise.all([
       User.create({ username: 'Jon' }),
       User.create({ username: 'Array' }),
-      User.create({ username: 'Ed', deleted_at: new Date }),
+      User.create({ username: 'Ed', deleted_at: new Date() })
     ])
 
     const list = await User.all()
@@ -129,7 +125,7 @@ describe('softDeletes', () => {
     await Promise.all([
       User.create({ username: 'Jon' }),
       User.create({ username: 'Array' }),
-      User.create({ username: 'Ed', deleted_at: new Date }),
+      User.create({ username: 'Ed', deleted_at: new Date() })
     ])
 
     const list = await User.query().withTrashed().fetch()
@@ -140,7 +136,7 @@ describe('softDeletes', () => {
     await Promise.all([
       User.create({ username: 'Jon' }),
       User.create({ username: 'Array' }),
-      User.create({ username: 'Ed', deleted_at: new Date }),
+      User.create({ username: 'Ed', deleted_at: new Date() })
     ])
 
     const list = await User.withTrashed().fetch()
@@ -151,7 +147,7 @@ describe('softDeletes', () => {
     await Promise.all([
       User.create({ username: 'Jon' }),
       User.create({ username: 'Array' }),
-      User.create({ username: 'Ed', deleted_at: new Date }),
+      User.create({ username: 'Ed', deleted_at: new Date() })
     ])
 
     const list = await User.query().onlyTrashed().fetch()
@@ -162,7 +158,7 @@ describe('softDeletes', () => {
     await Promise.all([
       User.create({ username: 'Jon' }),
       User.create({ username: 'Array' }),
-      User.create({ username: 'Ed', deleted_at: new Date }),
+      User.create({ username: 'Ed', deleted_at: new Date() })
     ])
 
     const list = await User.onlyTrashed().fetch()
@@ -175,8 +171,8 @@ describe('softDeletes', () => {
       const afterSpy = sinon.spy()
 
       const User = await defineModel(lucid, function () {
-          this.addHook('beforeDelete', beforeSpy)
-          this.addHook('afterDelete', afterSpy)
+        this.addHook('beforeDelete', beforeSpy)
+        this.addHook('afterDelete', afterSpy)
       })
 
       const model = await User.create({ username: 'Jon' })
@@ -192,8 +188,8 @@ describe('softDeletes', () => {
       const afterSpy = sinon.spy()
 
       const User = await defineModel(lucid, function () {
-          this.addHook('beforeRestore', beforeSpy)
-          this.addHook('afterRestore', afterSpy)
+        this.addHook('beforeRestore', beforeSpy)
+        this.addHook('afterRestore', afterSpy)
       })
 
       const model = await User.create({ username: 'Jon' })

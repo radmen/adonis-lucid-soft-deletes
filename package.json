@@ -4,7 +4,9 @@
   "description": "Experimental implementation of soft-deletes for Adonis Lucid",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "lint": "standard",
+    "lint:fix": "standard --fix"
   },
   "author": "",
   "license": "MIT",
@@ -13,12 +15,23 @@
   },
   "devDependencies": {
     "@adonisjs/fold": "^4.0.9",
-    "mysql": "^2.16.0",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
+    "mysql": "^2.16.0",
     "pg": "^7.4.3",
     "sinon": "^6.1.4",
     "sinon-chai": "^3.2.0",
-    "sqlite3": "^4.0.2"
+    "sqlite3": "^4.0.2",
+    "standard": "^11.0.1"
+  },
+  "standard": {
+    "globals": [
+      "it",
+      "after",
+      "before",
+      "use",
+      "describe",
+      "beforeEach"
+    ]
   }
 }
