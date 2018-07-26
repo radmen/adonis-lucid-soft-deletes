@@ -4,7 +4,7 @@ const sinonChai = require('sinon-chai')
 const lucidFactory = require('@adonisjs/lucid')
 const fold = require('@adonisjs/fold')
 const iocResolver = require('@adonisjs/lucid/lib/iocResolver')
-const { ServiceProvider } = require('../')
+const ServiceProvider = require('../providers/SoftDeletesProvider')
 
 const helpers = require('./helpers')
 

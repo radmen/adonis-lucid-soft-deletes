@@ -2,7 +2,6 @@
   "name": "@radmen/adonis-soft-deletes",
   "version": "0.1.0",
   "description": "Experimental implementation of soft-deletes for Adonis Lucid",
-  "main": "index.js",
   "scripts": {
     "test": "mocha",
     "lint": "standard",
