@@ -4,16 +4,18 @@
   "description": "Experimental implementation of soft-deletes for Adonis Lucid",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@adonisjs/lucid": "^6.0.1"
+  },
+  "devDependencies": {
     "@adonisjs/fold": "^4.0.9",
-    "@adonisjs/lucid": "^6.0.1",
+    "mysql": "^2.16.0",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
-    "mysql2": "^1.5.3",
     "pg": "^7.4.3",
     "sinon": "^6.1.4",
     "sinon-chai": "^3.2.0",
