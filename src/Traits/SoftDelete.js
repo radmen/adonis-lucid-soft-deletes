@@ -60,6 +60,23 @@ class SoftDelete {
       return !!affected
     }
 
+    Model.scopeWithTrashed = function (query) {
+      return query.ignoreScopes(['soft_deletes'])
+    }
+
+    Model.withTrashed = function () {
+      return this.query().withTrashed()
+    }
+
+    Model.scopeOnlyTrashed = function (query) {
+      return query.ignoreScopes(['soft_deletes'])
+        .whereNotNull('deleted_at')
+    }
+
+    Model.onlyTrashed = function () {
+      return this.query().onlyTrashed()
+    }
+
     /**
      * Assume that model is always in non-deleted state.
      * It's easier to work this way with models state.

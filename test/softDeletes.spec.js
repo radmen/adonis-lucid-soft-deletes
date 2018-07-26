@@ -125,6 +125,50 @@ describe('softDeletes', () => {
     expect(list.rows.length).to.equal(2)
   })
 
+  it('has scope which includes deleted models', async () => {
+    await Promise.all([
+      User.create({ username: 'Jon' }),
+      User.create({ username: 'Array' }),
+      User.create({ username: 'Ed', deleted_at: new Date }),
+    ])
+
+    const list = await User.query().withTrashed().fetch()
+    expect(list.rows.length).to.equal(3)
+  })
+
+  it('has static scope which includes deleted models', async () => {
+    await Promise.all([
+      User.create({ username: 'Jon' }),
+      User.create({ username: 'Array' }),
+      User.create({ username: 'Ed', deleted_at: new Date }),
+    ])
+
+    const list = await User.withTrashed().fetch()
+    expect(list.rows.length).to.equal(3)
+  })
+
+  it('has scope which gets only deleted models', async () => {
+    await Promise.all([
+      User.create({ username: 'Jon' }),
+      User.create({ username: 'Array' }),
+      User.create({ username: 'Ed', deleted_at: new Date }),
+    ])
+
+    const list = await User.query().onlyTrashed().fetch()
+    expect(list.rows.length).to.equal(1)
+  })
+
+  it('has static scope gets only includes deleted models', async () => {
+    await Promise.all([
+      User.create({ username: 'Jon' }),
+      User.create({ username: 'Array' }),
+      User.create({ username: 'Ed', deleted_at: new Date }),
+    ])
+
+    const list = await User.onlyTrashed().fetch()
+    expect(list.rows.length).to.equal(1)
+  })
+
   describe('events', () => {
     it('triggers delete hooks', async () => {
       const beforeSpy = sinon.spy()
