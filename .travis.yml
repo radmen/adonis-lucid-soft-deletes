@@ -9,7 +9,7 @@ node_js:
   - 8.0.0
 
 env:
-  - NODE_ENV=development
+  - NODE_ENV=sqlite
   - NODE_ENV=mysql
   - NODE_ENV=mysql5
   - NODE_ENV=postgres
