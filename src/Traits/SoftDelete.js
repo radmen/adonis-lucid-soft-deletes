@@ -38,9 +38,14 @@ class SoftDelete {
     Model.prototype.restore = async function (trx) {
       await this.constructor.$hooks.before.exec('restore', this)
 
-      const affected = await Database.table(this.constructor.table)
-        .transacting(trx)
-        .where(this.constructor.primaryKey, this.primaryKeyValue)
+      const query = Database.table(this.constructor.table)
+
+      if (trx) {
+        // @TODO is this method mutating?
+        query.transacting(trx)
+      }
+
+      const affected = await query.where(this.constructor.primaryKey, this.primaryKeyValue)
         .update({ deleted_at: null })
 
       if (affected > 0) {
@@ -75,7 +80,9 @@ class SoftDelete {
 
     Object.defineProperty(Model.prototype, 'wasTrashed', {
       get () {
-        return this.isAttributeDirty('deleted_at') && !this.isTrashed
+        const dirtyAttributes = this.dirty
+
+        return ('deleted_at' in dirtyAttributes) && !this.isTrashed
       }
     })
   }

@@ -9,6 +9,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@adonisjs/fold": "^4.0.9",
     "@adonisjs/lucid": "^6.0.1",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
