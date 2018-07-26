@@ -5,7 +5,8 @@ services:
 
 language: node_js
 node_js:
-  - "8"
+  - node
+  - 8.0.0
 
 env:
   - NODE_ENV=development
