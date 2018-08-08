@@ -96,6 +96,12 @@ class SoftDeletes {
         return ('deleted_at' in dirtyAttributes) && !this.isTrashed
       }
     })
+
+    Object.defineProperty(Model, 'usesSoftDeletes', {
+      get () {
+        return true
+      }
+    })
   }
 }
 

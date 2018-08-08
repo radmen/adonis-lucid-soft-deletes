@@ -19,7 +19,7 @@ fold.resolver.appNamespace('Adonis')
 
 const noop = () => {}
 
-const defineModel = async (lucid, bootCallback = noop) => {
+const defineModel = (lucid, bootCallback = noop) => {
   const User = class extends lucid.Model {
     static boot () {
       super.boot()
@@ -29,7 +29,7 @@ const defineModel = async (lucid, bootCallback = noop) => {
     }
   }
 
-  await lucid.Models.add('user', User)
+  lucid.Models.add('user', User)
 
   return User
 }
@@ -46,6 +46,9 @@ describe('softDeletes', () => {
     ioc.singleton('Adonis/Src/Database', () => lucid.db)
     ioc.alias('Adonis/Src/Database', 'Database')
 
+    ioc.bind('Adonis/Src/Model', () => lucid.Model)
+    ioc.alias('Adonis/Src/Model', 'Model')
+
     await helpers.createTables(lucid.db)
 
     new ServiceProvider(ioc).register()
@@ -54,7 +57,7 @@ describe('softDeletes', () => {
   beforeEach(async () => {
     await lucid.db.table('users').truncate()
 
-    User = await defineModel(lucid)
+    User = defineModel(lucid)
   })
 
   after(async () => {
@@ -174,7 +177,7 @@ describe('softDeletes', () => {
       const beforeSpy = sinon.spy()
       const afterSpy = sinon.spy()
 
-      const User = await defineModel(lucid, function () {
+      const User = defineModel(lucid, function () {
         this.addHook('beforeDelete', beforeSpy)
         this.addHook('afterDelete', afterSpy)
       })
@@ -191,7 +194,7 @@ describe('softDeletes', () => {
       const beforeSpy = sinon.spy()
       const afterSpy = sinon.spy()
 
-      const User = await defineModel(lucid, function () {
+      const User = defineModel(lucid, function () {
         this.addHook('beforeRestore', beforeSpy)
         this.addHook('afterRestore', afterSpy)
       })
@@ -203,6 +206,76 @@ describe('softDeletes', () => {
 
       expect(beforeSpy).to.have.been.calledWith(model)
       expect(afterSpy).to.have.been.calledWith(model)
+    })
+  })
+
+  describe('QueryBuilder', () => {
+    it('marks as deleted query records', async () => {
+      const clock = sinon.useFakeTimers({
+        now: new Date()
+      })
+
+      await Promise.all([
+        User.create({ username: 'Jon' }),
+        User.create({ username: 'Array' }),
+        User.create({ username: 'Ed' })
+      ])
+
+      await User.query()
+        .delete()
+
+      const [{ count }] = await lucid.db.table('users')
+        .where({
+          deleted_at: moment().format(DATE_FORMAT)
+        })
+        .count('* as count')
+
+      expect(parseInt(count)).to.equal(3)
+
+      clock.restore()
+    })
+
+    it('force deletes query records', async () => {
+      await Promise.all([
+        User.create({ username: 'Jon' }),
+        User.create({ username: 'Array' }),
+        User.create({ username: 'Ed' })
+      ])
+
+      await User.query()
+        .delete({ force: true })
+
+      const [{ count }] = await lucid.db.table('users').count('* as count')
+      expect(parseInt(count)).to.equal(0)
+    })
+
+    it('removes records for models without soft-deletes', async () => {
+      class User extends lucid.Model {}
+
+      lucid.Models.add('user', User)
+
+      await Promise.all([
+        User.create({ username: 'Jon' }),
+        User.create({ username: 'Array' }),
+        User.create({ username: 'Ed' })
+      ])
+
+      await User.query()
+        .delete()
+
+      const [{ count }] = await lucid.db.table('users').count('* as count')
+      expect(parseInt(count)).to.equal(0)
+    })
+  })
+
+  describe('Model', () => {
+    it('usesSoftDeletes property', () => {
+      class Product extends lucid.Model {}
+
+      lucid.Models.add('product', Product)
+
+      expect(Product.usesSoftDeletes).to.equal(false)
+      expect(User.usesSoftDeletes).to.equal(true)
     })
   })
 })

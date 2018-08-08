@@ -14,7 +14,7 @@
   },
   "files": [
     "providers/**",
-    "src/Traits/**"
+    "src/**"
   ],
   "devDependencies": {
     "@adonisjs/fold": "^4.0.9",

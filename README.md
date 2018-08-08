@@ -56,6 +56,20 @@ By default, Adonis Models can't be updated if they've been deleted. When this ha
 
 This may generate some unexpected problems, yet they didn't occur to me.
 
+### Monkey patches
+
+To make things work I had to monkey patch some of Adonis Lucid components:
+
+#### Model
+
+Every model has `usesSoftDeletes` static attribute. By default it returns `false`. If a model uses `Lucid/SoftDeletes` trait this attribute will return `true`.  
+
+#### Lucid/QueryModel
+
+If a `Model` uses soft-deletes `delete()` method will mark matching records as soft-deleted.
+
+To remove matching records pass `{ force: true }` as a first argument.
+
 ## Known bugs
 
 ### Global scope with `OR` statements
