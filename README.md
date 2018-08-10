@@ -62,7 +62,8 @@ To make things work I had to monkey patch some of Adonis Lucid components:
 
 #### Model
 
-Every model has `usesSoftDeletes` static attribute. By default it returns `false`. If a model uses `Lucid/SoftDeletes` trait this attribute will return `true`.  
+* every model has `usesSoftDeletes` static attribute. By default it returns `false`. If a model uses `Lucid/SoftDeletes` trait this attribute will return `true`.
+* `query()` static method will return patched version of `QueryBuilder`
 
 #### Lucid/QueryModel
 

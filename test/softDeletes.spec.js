@@ -51,7 +51,10 @@ describe('softDeletes', () => {
 
     await helpers.createTables(lucid.db)
 
-    new ServiceProvider(ioc).register()
+    const provider = new ServiceProvider(ioc)
+
+    provider.register()
+    provider.boot()
   })
 
   beforeEach(async () => {
