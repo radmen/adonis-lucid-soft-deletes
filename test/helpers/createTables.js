@@ -14,6 +14,7 @@ module.exports = db => Promise.all([
   }),
 
   db.schema.createTable('user_tags', (table) => {
+    table.increments()
     table.integer('user_id').unsigned()
     table.integer('tag_id').unsigned()
     table.timestamps()
