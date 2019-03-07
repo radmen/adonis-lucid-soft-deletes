@@ -18,9 +18,10 @@ const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss'
 fold.resolver.appNamespace('Adonis')
 
 const noop = () => {}
+const always = (value) => () => value
 
-const defineModel = (lucid, bootCallback = noop) => {
-  const User = class extends lucid.Model {
+const defineModel = (name, lucid, bootCallback = noop, extendObject = {}) => {
+  const Model = class extends lucid.Model {
     static boot () {
       super.boot()
 
@@ -29,9 +30,14 @@ const defineModel = (lucid, bootCallback = noop) => {
     }
   }
 
-  lucid.Models.add('user', User)
+  lucid.Models.add(name, Model)
 
-  return User
+  const { staticMethods = {}, methods = {} } = extendObject
+  Object.defineProperty(Model, 'name', { value: name })
+  Object.assign(Model, staticMethods)
+  Object.assign(Model.prototype, methods)
+
+  return Model
 }
 
 iocResolver.setFold(fold)
@@ -43,10 +49,10 @@ describe('softDeletes', () => {
   before(async () => {
     lucid = lucidFactory(helpers.lucidConfig)
 
-    ioc.singleton('Adonis/Src/Database', () => lucid.db)
+    ioc.singleton('Adonis/Src/Database', always(lucid.db))
     ioc.alias('Adonis/Src/Database', 'Database')
 
-    ioc.bind('Adonis/Src/Model', () => lucid.Model)
+    ioc.bind('Adonis/Src/Model', always(lucid.Model))
     ioc.alias('Adonis/Src/Model', 'Model')
 
     await helpers.createTables(lucid.db)
@@ -58,9 +64,11 @@ describe('softDeletes', () => {
   })
 
   beforeEach(async () => {
+    await lucid.db.table('user_tags').truncate()
+    await lucid.db.table('tags').truncate()
     await lucid.db.table('users').truncate()
 
-    User = defineModel(lucid)
+    User = defineModel('User', lucid)
   })
 
   after(async () => {
@@ -180,7 +188,7 @@ describe('softDeletes', () => {
       const beforeSpy = sinon.spy()
       const afterSpy = sinon.spy()
 
-      const User = defineModel(lucid, function () {
+      const User = defineModel('User', lucid, function () {
         this.addHook('beforeDelete', beforeSpy)
         this.addHook('afterDelete', afterSpy)
       })
@@ -197,7 +205,7 @@ describe('softDeletes', () => {
       const beforeSpy = sinon.spy()
       const afterSpy = sinon.spy()
 
-      const User = defineModel(lucid, function () {
+      const User = defineModel('User', lucid, function () {
         this.addHook('beforeRestore', beforeSpy)
         this.addHook('afterRestore', afterSpy)
       })
@@ -279,6 +287,75 @@ describe('softDeletes', () => {
 
       expect(Product.usesSoftDeletes).to.equal(false)
       expect(User.usesSoftDeletes).to.equal(true)
+    })
+  })
+
+  describe('Many-to-many relation', () => {
+    let User
+    let Tag
+    let UserTag
+
+    before(() => {
+      //  return this.belongsToMany('App/Models/Vehicle').pivotModel('App/Models/VehicleGpsdevice')
+      User = defineModel('User', lucid, noop, {
+        methods: {
+          tags () {
+            return this.belongsToMany('Tag').pivotModel('UserTag')
+          }
+        }
+      })
+      Tag = defineModel('Tag', lucid)
+      UserTag = defineModel('UserTag', lucid)
+
+      ioc.bind('Tag', always(Tag))
+      ioc.bind('UserTag', always(UserTag))
+    })
+
+    it('does not include deleted pivots', async () => {
+      const user = await User.create({ username: 'Jon' })
+      const tags = await Promise.all([
+        Tag.create({ title: 'Foo' }),
+        Tag.create({ title: 'Bar' })
+      ])
+
+      await Promise.all(tags.map(model => user.tags().save(model)))
+
+      await lucid.db.table('user_tags')
+        .where({ tag_id: tags[0].id })
+        .update({ deleted_at: new Date() })
+
+      const userTags = await user.tags().fetch()
+
+      expect(userTags.rows.length).to.equal(1)
+
+      const freshUser = await User.query()
+        .with('tags')
+        .first()
+
+      expect(freshUser.getRelated('tags').rows.length).to.equal(1)
+    })
+
+    // Fails due to bug in Lucid
+    it.skip('appends scope to whereHas() statement', async () => {
+      const user = await User.create({ username: 'Jon' })
+      const tags = await Promise.all([
+        Tag.create({ title: 'Foo' }),
+        Tag.create({ title: 'Bar' })
+      ])
+
+      await Promise.all(tags.map(model => user.tags().save(model)))
+
+      await lucid.db.table('user_tags')
+        .where({ tag_id: tags[0].id })
+        .update({ deleted_at: new Date() })
+
+      const freshUser = await User.query()
+        .whereHas('tags', (query) => {
+          query.where('title', 'Foo')
+        })
+        .first()
+
+      expect(freshUser).to.be.undefined // eslint-disable-line
     })
   })
 })
