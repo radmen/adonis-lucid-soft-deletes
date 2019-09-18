@@ -183,6 +183,10 @@ describe('softDeletes', () => {
     expect(list.rows.length).to.equal(1)
   })
 
+  it('adds deleted_at column to dates', () => {
+    expect(User.dates).to.eql(['created_at', 'updated_at', 'deleted_at'])
+  })
+
   describe('events', () => {
     it('triggers delete hooks', async () => {
       const beforeSpy = sinon.spy()

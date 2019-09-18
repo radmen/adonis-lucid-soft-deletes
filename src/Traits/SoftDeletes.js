@@ -73,6 +73,8 @@ class SoftDeletes {
       return this.query().onlyTrashed()
     }
 
+    const {dates} = Model
+
     Object.defineProperties(Model.prototype, {
       /**
        * Assume that model is always in non-deleted state.
@@ -104,6 +106,12 @@ class SoftDeletes {
       usesSoftDeletes: {
         get () {
           return true
+        }
+      },
+
+      dates: {
+        get () {
+          return dates.concat(deletedAtColumn)
         }
       }
     })
