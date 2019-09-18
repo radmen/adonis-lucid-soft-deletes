@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v0.1.3] - 2019-09-18
+### Fixed
+- append `deleted_at` to `Model.dates`
+
 ## [v0.1.2] - 2018-08-10
 ### Fixed
 - Patch `QueryBuilder` when requested (via `Model.query()` method)
@@ -24,7 +28,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `isTrashed` getter
 - `wasTrashed` getter
 
-[Unreleased]: https://github.com/radmen/adonis-lucid-soft-deletes/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/radmen/adonis-lucid-soft-deletes/compare/v0.1.3...HEAD
+[v0.1.3]: https://github.com/radmen/adonis-lucid-soft-deletes/compare/v0.1.2...v0.1.3
 [v0.1.2]: https://github.com/radmen/adonis-lucid-soft-deletes/compare/v0.1.1...v0.1.2
 [v0.1.1]: https://github.com/radmen/adonis-lucid-soft-deletes/compare/v0.1.0...v0.1.1
 [v0.1.0]: https://github.com/radmen/adonis-lucid-soft-deletes/compare/1d06747...v0.1.0
