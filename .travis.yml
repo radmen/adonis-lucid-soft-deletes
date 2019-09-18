@@ -13,7 +13,7 @@ env:
   - NODE_ENV=mysql
   - NODE_ENV=mysql5
   - NODE_ENV=postgres
-  - NODE_ENV=postgres9
+  - NODE_ENV=postgres10
 
 before_script:
   - .travis/setUp.sh

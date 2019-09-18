@@ -34,12 +34,12 @@ case "$NODE_ENV" in
     sleep 10
     ;;
 
-  "postgres9")
+  "postgres10")
     docker run -d --rm --name knex-db -p 7000:5432 \
       -e POSTGRES_USER=test \
       -e POSTGRES_USER=test \
       -e POSTGRES_PASSWORD=test \
-      postgres:9-alpine
+      postgres:10-alpine
 
     sleep 10
     ;;

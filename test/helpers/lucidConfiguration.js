@@ -10,7 +10,7 @@ const drivers = {
   mysql5: 'mysql',
   mysql: 'mysql',
   postgres: 'pg',
-  postgres9: 'pg'
+  postgres10: 'pg'
 }
 
 const sqlite = {

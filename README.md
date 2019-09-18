@@ -111,7 +111,7 @@ Available databases:
 * `mysql` will use the latest mysql
 * `mysql5` will use latest mysql 5.x
 * `postgres` will use latest postgres
-* `postgres9` will use latest postgres 9.x 
+* `postgres10` will use latest postgres 10.x 
 
 ## Why separate package?
 
