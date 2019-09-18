@@ -6,7 +6,7 @@ services:
 language: node_js
 node_js:
   - node
-  - 8.0.0
+  - 10
 
 env:
   - NODE_ENV=sqlite
