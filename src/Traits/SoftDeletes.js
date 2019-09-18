@@ -4,9 +4,11 @@ const Database = use('Database')
 
 class SoftDeletes {
   register (Model) {
+    const deletedAtColumn = 'deleted_at'
+
     Model.addGlobalScope(
       query => {
-        query.whereNull(`${Model.table}.deleted_at`)
+        query.whereNull(`${Model.table}.${deletedAtColumn}`)
       },
       'soft_deletes'
     )
@@ -20,13 +22,13 @@ class SoftDeletes {
 
       const updatePromise = force
         ? query.delete()
-        : query.update({ deleted_at: Model.formatDates('deleted_at', now) })
+        : query.update({ [deletedAtColumn]: Model.formatDates(deletedAtColumn, now) })
 
       const affected = await updatePromise
 
       if (affected > 0) {
         // this attribute will be marked as `dirty`
-        this.set('deleted_at', force ? null : now)
+        this.set(deletedAtColumn, force ? null : now)
         this.freeze()
       }
 
@@ -40,13 +42,13 @@ class SoftDeletes {
 
       const query = Database.table(this.constructor.table)
       const affected = await query.where(this.constructor.primaryKey, this.primaryKeyValue)
-        .update({ deleted_at: null })
+        .update({ [deletedAtColumn]: null })
 
       if (affected > 0) {
         this.$frozen = false
 
         // this attribute will be marked as `dirty`
-        this.set('deleted_at', null)
+        this.set(deletedAtColumn, null)
       }
 
       await this.constructor.$hooks.after.exec('restore', this)
@@ -64,7 +66,7 @@ class SoftDeletes {
 
     Model.scopeOnlyTrashed = function (query) {
       return query.ignoreScopes(['soft_deletes'])
-        .whereNotNull('deleted_at')
+        .whereNotNull(deletedAtColumn)
     }
 
     Model.onlyTrashed = function () {
@@ -85,7 +87,7 @@ class SoftDeletes {
 
     Object.defineProperty(Model.prototype, 'isTrashed', {
       get () {
-        return !!this.$attributes.deleted_at
+        return !!this.$attributes[deletedAtColumn]
       }
     })
 
@@ -93,7 +95,7 @@ class SoftDeletes {
       get () {
         const dirtyAttributes = this.dirty
 
-        return ('deleted_at' in dirtyAttributes) && !this.isTrashed
+        return (deletedAtColumn in dirtyAttributes) && !this.isTrashed
       }
     })
 
