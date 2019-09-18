@@ -73,7 +73,7 @@ class SoftDeletes {
       return this.query().onlyTrashed()
     }
 
-    const {dates} = Model
+    const { dates } = Model
 
     Object.defineProperties(Model.prototype, {
       /**
