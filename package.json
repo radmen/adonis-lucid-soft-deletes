@@ -1,6 +1,6 @@
 {
   "name": "@radmen/adonis-lucid-soft-deletes",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Experimental implementation of soft-deletes for Adonis Lucid",
   "scripts": {
     "test": "mocha",
