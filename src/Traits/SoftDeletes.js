@@ -73,35 +73,38 @@ class SoftDeletes {
       return this.query().onlyTrashed()
     }
 
-    /**
-     * Assume that model is always in non-deleted state.
-     * It's easier to work this way with models state.
-     *
-     * And if you wonder if that's safe, well - not really.
-     */
-    Object.defineProperty(Model.prototype, 'isDeleted', {
-      get () {
-        return false
+    Object.defineProperties(Model.prototype, {
+      /**
+       * Assume that model is always in non-deleted state.
+       * It's easier to work this way with models state.
+       *
+       * And if you wonder if that's safe, well - not really.
+       */
+      isDeleted: {
+        get () {
+          return false
+        }
+      },
+
+      isTrashed: {
+        get () {
+          return !!this.$attributes[deletedAtColumn]
+        }
+      },
+
+      wasTrashed: {
+        get () {
+          const dirtyAttributes = this.dirty
+          return (deletedAtColumn in dirtyAttributes) && !this.isTrashed
+        }
       }
     })
 
-    Object.defineProperty(Model.prototype, 'isTrashed', {
-      get () {
-        return !!this.$attributes[deletedAtColumn]
-      }
-    })
-
-    Object.defineProperty(Model.prototype, 'wasTrashed', {
-      get () {
-        const dirtyAttributes = this.dirty
-
-        return (deletedAtColumn in dirtyAttributes) && !this.isTrashed
-      }
-    })
-
-    Object.defineProperty(Model, 'usesSoftDeletes', {
-      get () {
-        return true
+    Object.defineProperties(Model, {
+      usesSoftDeletes: {
+        get () {
+          return true
+        }
       }
     })
   }
