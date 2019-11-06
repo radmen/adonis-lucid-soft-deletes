@@ -19,13 +19,13 @@
   "devDependencies": {
     "@adonisjs/fold": "^4.0.9",
     "chai": "^4.2.0",
-    "mocha": "^6.2.0",
+    "mocha": "^6.2.2",
     "mysql": "^2.17.1",
     "pg": "^7.12.1",
-    "sinon": "^7.4.2",
+    "sinon": "^7.5.0",
     "sinon-chai": "^3.3.0",
     "sqlite3": "^4.1.0",
-    "standard": "^14.3.0"
+    "standard": "^14.3.1"
   },
   "standard": {
     "globals": [
