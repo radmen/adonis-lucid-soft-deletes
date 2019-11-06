@@ -19,5 +19,12 @@ module.exports = db => Promise.all([
     table.integer('tag_id').unsigned()
     table.timestamps()
     table.timestamp('deleted_at').nullable()
+  }),
+
+  db.schema.createTable('comments', (table) => {
+    table.increments()
+    table.integer('reply_to_comment_id').unsigned().nullable()
+    table.timestamps()
+    table.timestamp('deleted_at').nullable()
   })
 ])
