@@ -364,11 +364,13 @@ describe('softDeletes', () => {
 
   describe('Regression tests', () => {
     it('gh-10', async () => {
-      const Comment = defineModel('Comment', lucid)
-
-      Comment.prototype.replies = function () {
-        return this.hasMany(Comment, 'id', 'reply_to_comment_id')
-      }
+      const Comment = defineModel('Comment', lucid, noop, {
+        methods: {
+          replies () {
+            return this.hasMany(Comment, 'id', 'reply_to_comment_id')
+          }
+        }
+      })
 
       const comment = await Comment.create()
 
