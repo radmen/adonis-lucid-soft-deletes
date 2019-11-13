@@ -67,6 +67,7 @@ describe('softDeletes', () => {
     await lucid.db.table('user_tags').truncate()
     await lucid.db.table('tags').truncate()
     await lucid.db.table('users').truncate()
+    await lucid.db.table('comments').truncate()
 
     User = defineModel('User', lucid)
   })
@@ -329,13 +330,11 @@ describe('softDeletes', () => {
         .update({ deleted_at: new Date() })
 
       const userTags = await user.tags().fetch()
-
       expect(userTags.rows.length).to.equal(1)
 
       const freshUser = await User.query()
         .with('tags')
         .first()
-
       expect(freshUser.getRelated('tags').rows.length).to.equal(1)
     })
 
@@ -360,6 +359,33 @@ describe('softDeletes', () => {
         .first()
 
       expect(freshUser).to.be.undefined // eslint-disable-line
+    })
+  })
+
+  describe('Regression tests', () => {
+    it('gh-10', async () => {
+      const Comment = defineModel('Comment', lucid, noop, {
+        methods: {
+          replies () {
+            return this.hasMany(Comment, 'id', 'reply_to_comment_id')
+          }
+        }
+      })
+
+      const comment = await Comment.create()
+
+      await Promise.all([
+        Comment.create({ reply_to_comment_id: comment.id }),
+        Comment.create({ reply_to_comment_id: comment.id, deleted_at: new Date() }),
+        Comment.create({ reply_to_comment_id: comment.id, deleted_at: new Date() })
+      ])
+
+      const results = await Comment.query()
+        .whereNull('reply_to_comment_id')
+        .withCount('replies')
+        .first()
+
+      expect(parseInt(results.replies_count, 10)).to.equal(1)
     })
   })
 })
