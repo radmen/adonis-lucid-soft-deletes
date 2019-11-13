@@ -1,14 +1,28 @@
 'use strict'
 
 const Database = use('Database')
+const {retrieveTableDetails} = require('../utils')
 
 class SoftDeletes {
   register (Model) {
     const deletedAtColumn = 'deleted_at'
 
     Model.addGlobalScope(
-      query => {
-        query.whereNull(`${Model.table}.${deletedAtColumn}`)
+      function (query) {
+        const {table, alias} = retrieveTableDetails(query)
+
+        // This might seem to be odd, yet there's a reason for this.
+        // When using pivot models there's no easy way to retrieve
+        // the correct name of the table from the query builder.
+        // This simple check makes sure that we use the table (or alias)
+        // retrieved from query builder only when the base table name
+        // is the same as the table name from model.
+        // If not, fallback to models default table name.
+        const tableName = (Model.table === table)
+          ? (alias || table)
+          : Model.table
+
+        query.whereNull(`${tableName}.${deletedAtColumn}`)
       },
       'soft_deletes'
     )

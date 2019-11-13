@@ -27,6 +27,8 @@ const defineModel = (name, lucid, bootCallback = noop, extendObject = {}) => {
 
       this.addTrait('@provider:Lucid/SoftDeletes')
       bootCallback.call(this)
+
+      this._debug = {name}
     }
   }
 
@@ -330,13 +332,11 @@ describe('softDeletes', () => {
         .update({ deleted_at: new Date() })
 
       const userTags = await user.tags().fetch()
-
       expect(userTags.rows.length).to.equal(1)
 
       const freshUser = await User.query()
         .with('tags')
         .first()
-
       expect(freshUser.getRelated('tags').rows.length).to.equal(1)
     })
 
