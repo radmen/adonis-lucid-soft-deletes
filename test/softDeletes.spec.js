@@ -27,8 +27,6 @@ const defineModel = (name, lucid, bootCallback = noop, extendObject = {}) => {
 
       this.addTrait('@provider:Lucid/SoftDeletes')
       bootCallback.call(this)
-
-      this._debug = { name }
     }
   }
 
@@ -385,7 +383,7 @@ describe('softDeletes', () => {
         .withCount('replies')
         .first()
 
-      expect(results.replies_count).to.equal(1)
+      expect(parseInt(results.replies_count, 10)).to.equal(1)
     })
   })
 })
