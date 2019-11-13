@@ -13,11 +13,11 @@ const tableRegex = /^(\w+)(?:\s+as\s+(\w+))?$/i
  * @param {Object} query
  * @return {TableDetails}
  */
-const retrieveTableDetails = ({query}) => {
-  const {_single: {table}} = query
-  const [_, tableName, alias = null] = tableRegex.exec(table)
+const retrieveTableDetails = ({ query }) => {
+  const { table } = query._single
+  const [, tableName, alias = null] = tableRegex.exec(table)
 
-  return {table: tableName, alias}
+  return { table: tableName, alias }
 }
 
-module.exports = {retrieveTableDetails}
+module.exports = { retrieveTableDetails }

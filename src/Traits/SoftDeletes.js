@@ -1,7 +1,7 @@
 'use strict'
 
 const Database = use('Database')
-const {retrieveTableDetails} = require('../utils')
+const { retrieveTableDetails } = require('../utils')
 
 class SoftDeletes {
   register (Model) {
@@ -9,7 +9,7 @@ class SoftDeletes {
 
     Model.addGlobalScope(
       function (query) {
-        const {table, alias} = retrieveTableDetails(query)
+        const { table, alias } = retrieveTableDetails(query)
 
         // This might seem to be odd, yet there's a reason for this.
         // When using pivot models there's no easy way to retrieve

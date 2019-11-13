@@ -28,7 +28,7 @@ const defineModel = (name, lucid, bootCallback = noop, extendObject = {}) => {
       this.addTrait('@provider:Lucid/SoftDeletes')
       bootCallback.call(this)
 
-      this._debug = {name}
+      this._debug = { name }
     }
   }
 
@@ -375,9 +375,9 @@ describe('softDeletes', () => {
       const comment = await Comment.create()
 
       await Promise.all([
-        Comment.create({reply_to_comment_id: comment.id}),
-        Comment.create({reply_to_comment_id: comment.id, deleted_at: new Date()}),
-        Comment.create({reply_to_comment_id: comment.id, deleted_at: new Date()}),
+        Comment.create({ reply_to_comment_id: comment.id }),
+        Comment.create({ reply_to_comment_id: comment.id, deleted_at: new Date() }),
+        Comment.create({ reply_to_comment_id: comment.id, deleted_at: new Date() })
       ])
 
       const results = await Comment.query()
