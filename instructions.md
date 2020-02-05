@@ -4,7 +4,7 @@ Make sure to register the soft deletes provider inside `start/app.js`
 
 ```js
 const providers = [
-  '@radmen/adonis-lucid-soft-deletes/providers/SoftDeletesProvider'
+  'igg-adonis-lucid-soft-deletes/providers/SoftDeletesProvider'
 ]
 ```
 

@@ -7,10 +7,10 @@ This code should be treated as *experimental* and *likely unstable*. You're usin
 ## Installation
 
 ```
-adonis install @radmen/adonis-lucid-soft-deletes
+adonis install igg-adonis-lucid-soft-deletes
 
 # for yarn users
-adonis install @radmen/adonis-lucid-soft-deletes --yarn
+adonis install igg-adonis-lucid-soft-deletes --yarn
 ```
 
 Next, make sure to read the [instructions.md](https://github.com/radmen/adonis-lucid-soft-deletes/blob/master/instructions.md) file.
