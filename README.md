@@ -15,6 +15,7 @@ adonis install igg-adonis-lucid-soft-deletes --yarn
 
 Next, make sure to read the [instructions.md](https://github.com/radmen/adonis-lucid-soft-deletes/blob/master/instructions.md) file.
 
+IGG [instructions.md](https://github.com/igeargeek/adonis-lucid-soft-deletes/blob/master/instructions.md)
 ## Usage
 
 ### Removing model
