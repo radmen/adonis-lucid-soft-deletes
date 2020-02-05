@@ -3,9 +3,9 @@ module.exports = (queryBuilderInstance) => {
     this._applyScopes()
 
     if (this.Model.usesSoftDeletes && !force) {
-      return this.query.update({
-        deleted_at: this.Model.formatDates('deleted_at', new Date())
-      })
+      const updateData = {}
+      updateData[this.Model.columnName] = this.Model.formatDates(this.Model.columnName, new Date())
+      return this.query.update(updateData)
     }
 
     return this.query.delete()

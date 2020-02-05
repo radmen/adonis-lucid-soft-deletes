@@ -23,7 +23,21 @@ class Post extends Model {
   }
 }
 ```
+If you would like to register the trait with another deletion column name, you can do as follows.
 
+```js
+const Model = use('Model')
+
+class Post extends Model {
+  static boot () {
+    super.boot()
+
+    this.addTrait('@provider:Lucid/SoftDeletes', {
+      deletedAtColumn: 'column_name'
+    })
+  }
+}
+```
 ## DB Schema
 
 Make sure, that your models table has `deleted_at` timestamp column.
