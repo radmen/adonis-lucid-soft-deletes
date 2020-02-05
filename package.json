@@ -1,6 +1,6 @@
 {
   "name": "igg-adonis-lucid-soft-deletes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Experimental implementation of soft-deletes for Adonis Lucid",
   "scripts": {
     "test": "mocha",
