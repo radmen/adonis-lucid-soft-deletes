@@ -128,7 +128,7 @@ class SoftDeletes {
         }
       },
 
-      columnName: {
+      deletedColumnName: {
         get () {
           return deletedAtColumn
         }

@@ -4,7 +4,7 @@ module.exports = (queryBuilderInstance) => {
 
     if (this.Model.usesSoftDeletes && !force) {
       return this.query.update({
-        [this.Model.columnName]: this.Model.formatDates(this.Model.columnName, new Date())
+        [this.Model.deletedColumnName]: this.Model.formatDates(this.Model.deletedColumnName, new Date())
       })
     }
 
