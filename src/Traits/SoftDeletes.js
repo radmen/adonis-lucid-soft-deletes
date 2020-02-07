@@ -7,9 +7,9 @@ class SoftDeletes {
   register (Model, customOptions) {
     const options = {
       deletedAtColumn: 'deleted_at',
-      ...customOptions,
+      ...customOptions
     }
-    
+
     const deletedAtColumn = options.deletedAtColumn
 
     Model.addGlobalScope(
