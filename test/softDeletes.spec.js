@@ -21,7 +21,7 @@ const noop = () => {}
 const always = (value) => () => value
 
 const customOptions = {
-  deleted_at: '',
+  deleted_at: {},
   d_delete: {
     deletedAtColumn: 'd_delete'
   }
@@ -49,28 +49,25 @@ const defineModel = (name, deletedAtColumn, lucid, bootCallback = noop, extendOb
 
 iocResolver.setFold(fold)
 
-const arr = ['deleted_at', 'd_delete']
-arr.forEach(deletedAtColumn => {
+const lucid = lucidFactory(helpers.lucidConfig)
+
+ioc.singleton('Adonis/Src/Database', always(lucid.db))
+ioc.alias('Adonis/Src/Database', 'Database')
+
+ioc.bind('Adonis/Src/Model', always(lucid.Model))
+ioc.alias('Adonis/Src/Model', 'Model')
+
+const provider = new ServiceProvider(ioc)
+
+provider.register()
+provider.boot()
+
+Object.keys(customOptions).forEach(deletedAtColumn => {
   describe(`softDeletes ${deletedAtColumn}`, () => {
-    
-    let lucid
     let User
 
     before(async () => {
-      lucid = lucidFactory(helpers.lucidConfig)
-
-      ioc.singleton('Adonis/Src/Database', always(lucid.db))
-      ioc.alias('Adonis/Src/Database', 'Database')
-
-      ioc.bind('Adonis/Src/Model', always(lucid.Model))
-      ioc.alias('Adonis/Src/Model', 'Model')
-
       await helpers.createTables(lucid.db, deletedAtColumn)
-
-      const provider = new ServiceProvider(ioc)
-
-      provider.register()
-      provider.boot()
     })
 
     beforeEach(async () => {
