@@ -4,8 +4,13 @@ const Database = use('Database')
 const { retrieveTableDetails } = require('../utils')
 
 class SoftDeletes {
-  register (Model) {
-    const deletedAtColumn = 'deleted_at'
+  register (Model, customOptions) {
+    const options = {
+      deletedAtColumn: 'deleted_at',
+      ...customOptions
+    }
+
+    const deletedAtColumn = options.deletedAtColumn
 
     Model.addGlobalScope(
       function (query) {
@@ -120,6 +125,12 @@ class SoftDeletes {
       usesSoftDeletes: {
         get () {
           return true
+        }
+      },
+
+      deletedColumnName: {
+        get () {
+          return deletedAtColumn
         }
       },
 
