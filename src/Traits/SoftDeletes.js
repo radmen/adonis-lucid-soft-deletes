@@ -36,7 +36,8 @@ class SoftDeletes {
       await this.constructor.$hooks.before.exec('delete', this)
 
       const now = new Date()
-      const query = Database.connection(Model.connection).table(this.constructor.table)
+      const query = Database.connection(Model.connection)
+        .table(this.constructor.table)
         .where(this.constructor.primaryKey, this.primaryKeyValue)
 
       const updatePromise = force
