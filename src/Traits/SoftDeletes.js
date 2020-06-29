@@ -59,7 +59,8 @@ class SoftDeletes {
     Model.prototype.restore = async function () {
       await this.constructor.$hooks.before.exec('restore', this)
 
-      const query = Database.connection(Model.connection).table(this.constructor.table)
+      const query = Database.connection(Model.connection)
+        .table(this.constructor.table)
       const affected = await query.where(this.constructor.primaryKey, this.primaryKeyValue)
         .update({ [deletedAtColumn]: null })
 
