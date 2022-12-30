@@ -19,7 +19,7 @@
   "devDependencies": {
     "@adonisjs/fold": "^4.0.9",
     "chai": "^4.2.0",
-    "mocha": "^6.2.2",
+    "mocha": "^10.2.0",
     "mysql": "^2.17.1",
     "pg": "^7.12.1",
     "sinon": "^7.5.0",
